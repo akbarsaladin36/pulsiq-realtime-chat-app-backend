@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 
 class Helper {
-  GetResponse(res, status, message, data = null) {
+  GetResponse(res, status = 200, message = "", data = null) {
     return res
       .status(status)
       .json({ status: status, message: message, data: data });

@@ -85,6 +85,15 @@ class AuthService {
       return helper.GetResponse(res, 500, error.message);
     }
   }
+
+  async CurrentUserService(req, res) {
+    try {
+      const authUser = helper.GetCurrentUser(req);
+      return helper.GetResponse(res, 200, "Authenticated user", authUser);
+    } catch (error) {
+      return helper.GetResponse(res, 500, error.message);
+    }
+  }
 }
 
 export default new AuthService();
