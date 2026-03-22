@@ -31,11 +31,34 @@ const io = new Server(server, {
 
 setIO(io);
 
+io.use((socket, next) => {
+  const token = socket.handshake.auth?.token;
+
+  if (!token) {
+    console.log("❌ No token");
+    return next(new Error("Unauthorized"));
+  }
+
+  try {
+    // sementara log dulu
+    console.log("TOKEN MASUK:", token);
+
+    // TODO: verify JWT kamu di sini
+    next();
+  } catch (err) {
+    return next(new Error("Invalid token"));
+  }
+});
+
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
   socket.on("join", (userId) => {
     socket.join(`user_${userId}`);
+  });
+
+  socket.on("send_message", (msg) => {
+    socket.to(`user_${msg.receiver_uuid}`).emit("receive_message", msg);
   });
 
   socket.on("disconnect", () => {
