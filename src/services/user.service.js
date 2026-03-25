@@ -20,6 +20,48 @@ class UserService {
     }
   }
 
+  async GetUsersPaginateService(req, res) {
+    try {
+      const authUser = helper.GetCurrentUser(req);
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 10;
+      const search = req.query.search || "";
+      const offset = (page - 1) * limit;
+      const result = await userRepository.GetAllPaginate(
+        search,
+        limit,
+        offset,
+        authUser.uuid
+      )
+      const data = {
+        data: result.data,
+        pagination: {
+          total: result.total,
+          page: page,
+          limit: limit,
+          total_pages: Math.ceil(result.total / limit),
+        },
+      };
+      if (result.data.length > 0) {
+        return helper.GetResponse(
+          res,
+          200,
+          "All users data are succesfully appeared!",
+          data
+        );
+      } else {
+        return helper.GetResponse(
+          res,
+          200,
+          "All users data are empty!",
+          data
+        );
+      }
+    } catch(error) {
+      return helper.GetResponse(res, 500, error.message);
+    }
+  }
+
   async GetUserService(req, res) {
     try {
       const { username } = req.params;

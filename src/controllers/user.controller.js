@@ -5,6 +5,10 @@ class UserController {
     return await userService.GetUsersService(req, res);
   }
 
+  async GetUsersPaginateController(req, res) {
+    return await userService.GetUsersPaginateService(req, res);
+  }
+
   async GetUserController(req, res) {
     return await userService.GetUserService(req, res);
   }
