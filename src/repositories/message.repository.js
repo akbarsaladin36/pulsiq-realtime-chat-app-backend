@@ -3,7 +3,7 @@ import db from "../config/database.js";
 class MessageRepository {
   async GetAllById(userUuid) {
     const query =
-      "SELECT u.id, u.uuid, u.username, msg.id, msg.message, msg.created_at AS last_message_time FROM (" +
+      "SELECT u.id, u.uuid, u.username, u.first_name, u.last_name, msg.id, msg.message, msg.created_at AS last_message_time FROM (" +
       "SELECT CASE WHEN sender_uuid = ? THEN receiver_uuid ELSE sender_uuid END AS other_user_uuid," +
       "MAX(id) AS last_message_id FROM messages WHERE sender_uuid = ? OR receiver_uuid = ?" +
       " GROUP BY other_user_uuid) m JOIN messages msg ON msg.id = m.last_message_id" +
