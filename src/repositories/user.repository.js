@@ -11,7 +11,7 @@ class UserRepository {
     let query = `
       SELECT uuid, username, first_name, last_name
       FROM users
-      WHERE uuid != ?
+      WHERE uuid != ? AND role != 'admin'
     `;
     const params = [currentUserUuid];
     if (search) {
@@ -25,7 +25,7 @@ class UserRepository {
     let countQuery = `
       SELECT COUNT(*) as total
       FROM users
-      WHERE uuid != ?
+      WHERE uuid != ? AND role != 'admin'
     `;
     const countParams = [currentUserUuid];
     if (search) {
