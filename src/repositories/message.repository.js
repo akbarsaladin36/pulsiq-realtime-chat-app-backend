@@ -24,11 +24,11 @@ class MessageRepository {
       query += ` AND id < ?`;
       params.push(lastId);
     }
-    query += ` ORDER BY id ASC LIMIT ?`;
+    query += ` ORDER BY id DESC LIMIT ?`;
     params.push(limit);
     // console.log(db.format(query, params));
     const [rows] = await db.query(query, params);
-    return rows;
+    return rows.reverse();
   }
 
   async Create(data) {

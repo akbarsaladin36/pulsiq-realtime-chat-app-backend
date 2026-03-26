@@ -24,29 +24,25 @@ class MessageService {
 
   async GetMessageService(req, res) {
     try {
-      const authUser = helper.GetCurrentUser(req);
-      const { otherUserUuid } = req.params;
-      const limit = parseInt(req.query.limit) || 20;
-      const lastId = req.query.lastId ? parseInt(req.query.lastId) : null;
-      const messageDetails = await messageRepository.GetOne(
-        authUser.uuid,
-        otherUserUuid,
-        lastId,
-        limit,
-      );
-      if (messageDetails.length > 0) {
-        const data = {
-          ...messageDetails,
-        };
-        return helper.GetResponse(
-          res,
-          200,
-          "A message details are succesfully appeared!",
-          data,
-        );
-      } else {
-        return helper.GetResponse(res, 400, "A message details are empty!");
-      }
+    const authUser = helper.GetCurrentUser(req);
+    const { otherUserUuid } = req.params;
+    const limit = parseInt(req.query.limit) || 20;
+    const lastId = req.query.lastId ? parseInt(req.query.lastId) : null;
+    const messageDetails = await messageRepository.GetOne(
+      authUser.uuid,
+      otherUserUuid,
+      lastId,
+      limit + 1 // 🔥 ambil 1 lebih untuk cek
+    );
+    let hasMore = false;
+    if (messageDetails.length > limit) {
+      hasMore = true;
+      messageDetails.pop(); // buang extra
+    }
+    return helper.GetResponse(res, 200, "OK", {
+      messages: messageDetails,
+      hasMore,
+    });
     } catch (error) {
       return helper.GetResponse(res, 500, error.message);
     }
