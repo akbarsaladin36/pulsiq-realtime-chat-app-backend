@@ -25,8 +25,10 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: [process.env.SOCKET_IO_BACKEND_URL],
+    methods: ["GET", "POST"],
   },
+  path: "/pulsiq-app/socket.io"
 });
 
 setIO(io);
